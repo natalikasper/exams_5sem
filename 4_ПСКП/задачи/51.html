@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>seleect</title>
+</head>
+
+<body>
+    <h1>PULPIT</h1>
+    <div id="get_result"></div>
+    <button onclick="get('pulpit')">pulpit</button>
+    <button onclick="get('auditorium')">auditorium</button>
+    <button onclick="get('auditorium_type')">auditorium_type</button>
+    <button onclick="get('faculty')">faculty</button>
+    <button onclick="get('teacher')">teacher</button>
+    <button onclick="get('subject')">subject</button>
+
+    <script>
+        var currentTable = "";
+
+        function get(get_table) {
+            currentTable = get_table;
+            console.log('get');
+            fetch(`http://localhost:3000/api/${get_table}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            }).then(res => {
+                return res.json();
+            }).then(data => {
+                get_result.innerHTML = "";
+                var counter = 0;
+
+                var keys;
+                var values;
+
+                data.forEach(el => {
+                    keys = Object.keys(el);
+                    values = Object.values(el);
+
+                    var table_value = "";
+
+                    for (var i = 0; i < keys.length; i++) {
+                        table_value += keys[i] + ": "
+                            + `<input type="text" value='${values[i]}' id='${keys[i]}${counter}'/> `;
+                    }
+                    get_result.innerHTML += table_value + "<br/>";
+                    counter++;
+                })
+            })
+        }
+    </script>
+</body>
+</html>
